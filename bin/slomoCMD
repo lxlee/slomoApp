@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+import os
+import slomo
+import click
+
+@click.command("Slomo wrapper")
+@click.argument("png1")
+@click.argument("png2")
+@click.argument("dstDir")
+@click.argument("sf")
+@click.argument("device")
+@click.option('-m', default="slomo", help="interlate method, 'slomo' or 'flubber'")
+def _main(png1, png2, dstdir, sf, device, m):
+    os.makedirs(dstdir, exist_ok=True)
+    if m == "slomo":
+        slm = slomo.Slomo(os.path.join(slomo.__path__[0], "models", "SuperSloMo39.ckpt"), int(sf), device)
+        slm.process(png1, png2, dstdir)
+    elif m == "flubber":
+        flub = slomo.Flubber(int(sf))
+        flub.process(png1, png2, dstdir)
+    else:
+        print(f"Unsupport method '{m}'")
+
+if __name__ == "__main__":
+    _main()
